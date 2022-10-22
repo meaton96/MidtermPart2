@@ -31,7 +31,7 @@ namespace MidtermPart2 {
             char[][] previousDraw = CombineChars(GetCurrentRoom().GetRoom());
             Draw();
             while (player!.IsAlive) {
-                //Console.WriteLine(previousDraw.Equals(CombineChars(GetCurrentRoom().GetRoom())));
+                Console.WriteLine(previousDraw.Equals(CombineChars(GetCurrentRoom().GetRoom())));
                 if (!previousDraw.Equals(CombineChars(GetCurrentRoom().GetRoom()))) {
                     Draw();
                     
