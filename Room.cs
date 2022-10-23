@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 namespace MidtermPart2 {
     internal class Room {
 
-        public const char WALL_CHAR = '#';
-        public const char DOOR_CHAR = '$';
+        public const char WALL_CHAR = '\u25a0';
+        public const char DOOR_CHAR = '\u25a1';
+        public const char EMPTY_CHAR = ' ';
 
         private readonly int width, height;
         private readonly bool[] doorLocations;
-        private char[][] room;
+        private readonly char[][] room;
+
+
 
         public Room(int width, int height, bool[] doorLocations) {
             this.width = width;
@@ -24,6 +27,7 @@ namespace MidtermPart2 {
             }
             BuildRoom();
         }
+
 
         private void BuildRoom() {
             int middleX = width / 2;
@@ -51,23 +55,27 @@ namespace MidtermPart2 {
                             room[x][y] = WALL_CHAR;
                     }
                     else
-                        room[x][y] = ' ';
+                        room[x][y] = EMPTY_CHAR;
 
                 }
 
             }
         }
         public void Draw() {
+            Console.Clear();
             Console.SetCursorPosition(0, 0);
-            for (var x = 0; x < room.Length; x++) {
-                for (var y = 0; y < room[0].Length; y++) {
-                    Console.Write(room[x][y]);
+            for (var x = 0; x < room[0].Length; x++) {
+                for (var y = 0; y < room.Length; y++) {
+                    Console.Write(room[y][x]);
                 }
                 Console.Write("\n");
             }
         }
 
-        public char[][] GetRoom () {
+        public char GetCharAt(int x, int y) {
+            return room[x][y];
+        }
+        public char[][] GetRoomArray () {
             return room;
         }
         public int Width {  get { return width; } }

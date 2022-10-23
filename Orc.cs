@@ -9,7 +9,9 @@ namespace MidtermPart2 {
 
         private const char DRAW_CHAR = '\u262c';
         private static int numOrcs;
-        public Orc() : base(DRAW_CHAR, "orc + " + ++numOrcs) {
+        public Orc() : base(DRAW_CHAR, "orc " + ++numOrcs) {
+            health = 25;
+            attack = 5;
 
         }
     }
