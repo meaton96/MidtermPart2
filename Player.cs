@@ -14,6 +14,13 @@ namespace MidtermPart2 {
         }
 
         public bool IsAlive { get { return isAlive; } }
+
+        public override void Move(int direction, Room room) {
+            try {
+                base.Move(direction, room);
+            }
+            catch (Exception) { }
+        }
         
     }
 }

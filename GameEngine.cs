@@ -9,13 +9,18 @@ namespace MidtermPart2 {
     internal class GameEngine {
         List<Room>? rooms;
         Player? player;
-        List<Entity>? entities;
+        List<Enemy>? enemies;
         public GameEngine() { Start(); }
 
         public void Start() {
-            entities = new();
+            Console.CursorVisible = false;
+            enemies = new();
             Console.OutputEncoding = Encoding.Unicode;
             player = new Player();
+            Orc orc = new Orc();
+            orc.X = 3;
+            orc.Y = 3;
+            enemies.Add(orc);
             rooms = new() {
                 new Room(15, 30, new bool[] { true, true, true, true })
             };
@@ -23,45 +28,49 @@ namespace MidtermPart2 {
             player.Y = 5;
             Thread inputThread = new Thread(HandleInput);
             inputThread.Start();
+            
             Update();
         }
 
         public void Update() {
 
-            char[][] previousDraw = CombineChars(GetCurrentRoom().GetRoom());
-            Draw();
-            while (player!.IsAlive) {
-                Console.WriteLine(previousDraw.Equals(CombineChars(GetCurrentRoom().GetRoom())));
-                if (!previousDraw.Equals(CombineChars(GetCurrentRoom().GetRoom()))) {
-                    Draw();
-                    
-                    previousDraw = CombineChars(GetCurrentRoom().GetRoom());
-                }
-                //Thread.Sleep(42);
-            }
+            LoadNewRoom();
+
+          /* while (player!.IsAlive) {
+               
+            }*/
 
         }
-        public void HandleInput() {
-
+        public void LoadNewRoom() {
+            GetCurrentRoom().Draw();
+            //init enemies for room
+            //init objectives for room
+            //reset player pos at new door
+            Thread enemyThread = new Thread(UpdateEnemies);
+            enemyThread.Start();
+        }
+        public void UpdateEnemies() {
             while (player!.IsAlive) {
-                ConsoleKeyInfo keyPressed = Console.ReadKey(false);
-
+                enemies!.ForEach(e => e.Update(GetCurrentRoom()));
+                Thread.Sleep(500);
+            }
+        }
+        public void HandleInput() {
+            ConsoleKeyInfo keyPressed;
+            while (player!.IsAlive) {
+                keyPressed = Console.ReadKey(true);
                 switch (keyPressed.Key) {
                     case ConsoleKey.A:
-                        if (IsValidMove(0))
-                            player!.X--;
+                        player.Move(0, GetCurrentRoom());
                         break;
                     case ConsoleKey.W:
-                        if (IsValidMove(1))
-                            player!.Y--;
+                        player.Move(1, GetCurrentRoom());
                         break;
                     case ConsoleKey.D:
-                        if (IsValidMove(2))
-                            player!.X++;
+                        player.Move(2, GetCurrentRoom());
                         break;
                     case ConsoleKey.S:
-                        if (IsValidMove(3))
-                            player!.Y++;
+                        player.Move(3, GetCurrentRoom());
                         break;
                     default: break;
                 }
@@ -69,32 +78,26 @@ namespace MidtermPart2 {
             
         }
         
-        public bool IsValidMove(int direction) {
-            switch (direction) {
-                case 0: return GetCurrentRoom().GetRoom()[player!.X - 1][player.Y] != Room.WALL_CHAR;
-                case 1: return GetCurrentRoom().GetRoom()[player!.X][player.Y - 1] != Room.WALL_CHAR;
-                case 2: return GetCurrentRoom().GetRoom()[player!.X + 1][player.Y] != Room.WALL_CHAR;
-                case 3: return GetCurrentRoom().GetRoom()[player!.X][player.Y + 1] != Room.WALL_CHAR;
-                default: throw new IndexOutOfRangeException();
-
-            }
-        }
         public Room GetCurrentRoom() {
             return rooms!.First();
         }
 
-        public void Draw() {
-            Console.Clear();
-            char[][] toDraw = CombineChars(GetCurrentRoom().GetRoom());
+       /* public void Draw() {
+            player!.HasMoved = false;
+            //Console.Clear();
+            GetCurrentRoom().Draw();
+            player.Draw();
+           /* char[][] toDraw = CombineChars(GetCurrentRoom().GetRoom());
             for (var x = 0; x < toDraw.Length; x++) {
                 for (var y = 0; y < toDraw[0].Length; y++) {
                     Console.Write(toDraw[x][y]);
                 }
                 Console.Write("\n");
             }
+            return toDraw;
 
         }
-        private char[][] CombineChars(char[][] chars) {
+      /*  private char[][] CombineChars(char[][] chars) {
             char[][] result = chars;
             for (var x = 0; x < result.Length; x++) {
                 for (var y = 0; y < result[0].Length; y++) {
@@ -108,6 +111,6 @@ namespace MidtermPart2 {
                 }
             }
             return result;
-        }
+        }*/
     }
 }

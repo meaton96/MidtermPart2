@@ -57,6 +57,15 @@ namespace MidtermPart2 {
 
             }
         }
+        public void Draw() {
+            Console.SetCursorPosition(0, 0);
+            for (var x = 0; x < room.Length; x++) {
+                for (var y = 0; y < room[0].Length; y++) {
+                    Console.Write(room[x][y]);
+                }
+                Console.Write("\n");
+            }
+        }
 
         public char[][] GetRoom () {
             return room;
