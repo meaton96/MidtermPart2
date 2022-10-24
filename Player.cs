@@ -13,9 +13,10 @@ namespace MidtermPart2 {
         public const int RIGHT = 2;
         public const int DOWN = 3;
 
-        private const char DRAW_CHAR = '\u0002';
+        public const char DRAW_CHAR = '\u0002';
         private Ability[] abilities;
         private Weapon equippedWeapon;
+        //creates basic abilities and a weapon for short demo
         public Player() : base(DRAW_CHAR, "player") {
             equippedWeapon = new Weapon();
             health = 50;
@@ -28,7 +29,7 @@ namespace MidtermPart2 {
 
         public bool IsAlive { get { return health > 0; } }
 
-        
+        //return the string of abilities the player has for printing
         public String GetAbilityList() {
             string abilityList = "";
             for (var x = 0; x < abilities.Length; x++) {
@@ -38,6 +39,7 @@ namespace MidtermPart2 {
             }
             return abilityList;
         }
+        //get the ability by number for chosing ability to use
         public Ability GetAbilityByIndex(int index) {
             if (index >= 0 || index < abilities.Length)
                 return abilities[index];
